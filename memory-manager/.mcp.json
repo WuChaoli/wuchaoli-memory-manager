@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "serena": {
+      "command": "npx",
+      "args": ["-y", "@serena/mcp-server"],
+      "env": {
+        "SERENA_PROJECT_PATH": "/Users/wuchaoli/codespace/memeory-manager/memory-manager"
+      }
+    }
+  }
+}
