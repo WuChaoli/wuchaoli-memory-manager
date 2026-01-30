@@ -36,11 +36,16 @@ cd your-project
 ccl --plugin-dir ../wuchaoli-claude-plugin/memory-manager
 ```
 
-### 方式二：配置本地插件市场
+### 方式二：作为插件市场使用（推荐）
+
+将整个仓库作为插件市场添加到 Claude Code：
 
 ```bash
-# 添加本地市场
-claude config add marketplace /path/to/wuchaoli-claude-plugin/marketplace.json
+# 添加插件市场（使用 GitHub 仓库）
+/plugin marketplace add WuChaoli/wuchaoli-memory-manager
+
+# 或者使用本地路径
+claude config add marketplace /Users/wuchaoli/codespace/wuchaoli-claude-plugin/.claude-plugin/marketplace.json
 
 # 安装插件
 claude plugin install memory-manager
@@ -48,6 +53,11 @@ claude plugin install memory-manager
 # 启动 Claude Code
 ccl
 ```
+
+**使用 GitHub 的好处：**
+- 自动获取更新
+- 方便分享给团队
+- 支持版本管理
 
 ### 方式三：使用 Release 压缩包
 
@@ -61,7 +71,8 @@ ccl
 
 ```
 wuchaoli-claude-plugin/
-├── marketplace.json          # 市场索引
+├── .claude-plugin/
+│   └── marketplace.json      # 市场索引（用于插件市场）
 ├── README.md                 # 本文件
 └── memory-manager/           # 插件目录
     ├── .claude-plugin/
@@ -78,7 +89,7 @@ wuchaoli-claude-plugin/
 1. 在根目录下创建新插件目录：`my-plugin/`
 2. 创建插件清单：`my-plugin/.claude-plugin/plugin.json`
 3. 编写插件文档：`my-plugin/README.md`
-4. 更新市场索引：添加插件信息到 `marketplace.json`
+4. 更新市场索引：添加插件信息到 `.claude-plugin/marketplace.json`
 
 ## 配置
 
