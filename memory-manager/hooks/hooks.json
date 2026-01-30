@@ -3,56 +3,72 @@
   "hooks": {
     "SessionStart": [
       {
-        "type": "prompt",
-        "name": "init-and-load-memory",
-        "description": "Initialize memory system if needed and load recent session memory",
-        "enabled": true,
-        "timeout": 15000,
-        "prompt": "A new Claude Code session has just started.\n\nYour task: Initialize the memory system if needed, then load recent memories for context continuity.\n\n## Steps:\n\n1. **Check Memory System Initialization**:\n   - Check if `.claude/memory/long-term/knowledge.db` exists\n   - If NOT exists:\n     * Run the init script: `bash ${CLAUDE_PLUGIN_ROOT}/scripts/init-db.sh`\n     * Wait for initialization to complete\n     * Provide brief confirmation (1 line)\n   - If exists: Skip initialization (silent)\n\n2. **Check for Recent Sessions** (after init):\n   - Look for `.claude/memory/active-tasks/` directory\n   - Find the most recent task and session\n   - Check if the last session was within the last 7 days\n\n3. **Load Recent Memory** (if found):\n   - Use the `memory:load` command to load recent context\n   - Load only the most relevant information (last 1-2 sessions)\n   - Provide a brief summary of what was loaded\n\n4. **Skip if Not Needed**:\n   - If no recent sessions (>7 days old), skip loading\n   - If this is a completely new project, skip loading\n   - If no active tasks exist, skip silently\n\n5. **Provide Feedback**:\n   - If initialized: \"✓ Memory system initialized\"\n   - If memory loaded: \"📚 Loaded memory from task-XXX (date): brief summary\"\n   - If skipped: No output needed (silent)\n\n## Important:\n- Keep this fast (<10 seconds total)\n- Don't load too much context (max 10K tokens)\n- Only load if truly relevant\n- Silent operation if nothing to do\n- Use ${CLAUDE_PLUGIN_ROOT} for script paths\n\nExample outputs:\n```\n✓ Memory system initialized\n📚 Loaded memory from task-001 (2026-01-28): Working on authentication feature\n```\n\nOr if already initialized:\n```\n📚 Loaded memory from task-001 (2026-01-28): Working on authentication feature\n```\n\nOr if nothing to do: (no output)"
+        "hooks": [
+          {
+            "type": "prompt",
+            "name": "init-and-load-memory",
+            "description": "Initialize memory system if needed and load recent session memory",
+            "enabled": true,
+            "timeout": 15000,
+            "prompt": "A new Claude Code session has just started.\n\nYour task: Initialize the memory system if needed, then load recent memories for context continuity.\n\n## Steps:\n\n1. **Check Memory System Initialization**:\n   - Check if `.claude/memory/long-term/knowledge.db` exists\n   - If NOT exists:\n     * Run the init script: `bash ${CLAUDE_PLUGIN_ROOT}/scripts/init-db.sh`\n     * Wait for initialization to complete\n     * Provide brief confirmation (1 line)\n   - If exists: Skip initialization (silent)\n\n2. **Check for Recent Sessions** (after init):\n   - Look for `.claude/memory/active-tasks/` directory\n   - Find the most recent task and session\n   - Check if the last session was within the last 7 days\n\n3. **Load Recent Memory** (if found):\n   - Use the `memory:load` command to load recent context\n   - Load only the most relevant information (last 1-2 sessions)\n   - Provide a brief summary of what was loaded\n\n4. **Skip if Not Needed**:\n   - If no recent sessions (>7 days old), skip loading\n   - If this is a completely new project, skip loading\n   - If no active tasks exist, skip silently\n\n5. **Provide Feedback**:\n   - If initialized: \"✓ Memory system initialized\"\n   - If memory loaded: \"📚 Loaded memory from task-XXX (date): brief summary\"\n   - If skipped: No output needed (silent)\n\n## Important:\n- Keep this fast (<10 seconds total)\n- Don't load too much context (max 10K tokens)\n- Only load if truly relevant\n- Silent operation if nothing to do\n- Use ${CLAUDE_PLUGIN_ROOT} for script paths\n\nExample outputs:\n```\n✓ Memory system initialized\n📚 Loaded memory from task-001 (2026-01-28): Working on authentication feature\n```\n\nOr if already initialized:\n```\n📚 Loaded memory from task-001 (2026-01-28): Working on authentication feature\n```\n\nOr if nothing to do: (no output)"
+          }
+        ]
       }
     ],
     "PreCompact": [
       {
-        "type": "prompt",
-        "name": "intelligent-compression",
-        "description": "Intelligently compress context when it exceeds thresholds",
-        "enabled": true,
-        "timeout": 30000,
-        "prompt": "The context is about to be compacted because it has exceeded size thresholds (>128K tokens or >60% of limit).\n\nYour task: Perform intelligent compression using the 30%-70% strategy.\n\n## Steps:\n\n1. **Analyze Context**:\n   - Use the `context-analyzer` agent to analyze current context\n   - Get compression recommendations and strategy\n   - Identify what can be safely compressed\n\n2. **Apply Compression Strategy**:\n   - **Preserve**: Keep the most recent 30% of context intact\n   - **Compress**: Compress the older 70% of context\n   - **Save**: Save full context to SQLite before compression\n\n3. **Compression Techniques**:\n   - File contents → Replace with file path pointers\n   - Web pages → Replace with URL + brief summary\n   - Repeated info → Keep only latest version\n   - Tool outputs → Summarize or remove if not critical\n   - Long conversations → Summarize key points\n\n4. **Save Original Context**:\n   - Save full context to `.claude/memory/` before compression\n   - Store in SQLite `context_history` table\n   - Create compression pointer for recovery\n\n5. **Execute Compression**:\n   - Apply the compression strategy\n   - Verify context size reduced to ~60% of original\n   - Ensure critical information preserved\n\n6. **Provide Feedback**:\n   - Show before/after context size\n   - Indicate what was compressed\n   - Confirm save location\n\n## Compression Example:\n\nBefore (100K tokens):\n- Recent conversation (30K) ← KEEP\n- File contents (40K) ← COMPRESS to pointers (5K)\n- Web pages (20K) ← COMPRESS to summaries (3K)\n- Old conversation (10K) ← COMPRESS to summary (2K)\n\nAfter (40K tokens): 60% reduction\n\n## Important:\n- Always save before compressing\n- Preserve recent context (30%)\n- Target ~60% final size\n- Ensure recoverability\n\nExample output:\n```\n🗜️ Context compressed: 128K → 52K tokens (60% reduction)\n💾 Original saved to: .claude/memory/context-2026-01-29-001.json\n📊 Compressed: 15 files, 3 web pages, 2 conversations\n```"
+        "hooks": [
+          {
+            "type": "prompt",
+            "name": "intelligent-compression",
+            "description": "Intelligently compress context when it exceeds thresholds",
+            "enabled": true,
+            "timeout": 30000,
+            "prompt": "The context is about to be compacted because it has exceeded size thresholds (>128K tokens or >60% of limit).\n\nYour task: Perform intelligent compression using the 30%-70% strategy.\n\n## Steps:\n\n1. **Analyze Context**:\n   - Use the `context-analyzer` agent to analyze current context\n   - Get compression recommendations and strategy\n   - Identify what can be safely compressed\n\n2. **Apply Compression Strategy**:\n   - **Preserve**: Keep the most recent 30% of context intact\n   - **Compress**: Compress the older 70% of context\n   - **Save**: Save full context to SQLite before compression\n\n3. **Compression Techniques**:\n   - File contents → Replace with file path pointers\n   - Web pages → Replace with URL + brief summary\n   - Repeated info → Keep only latest version\n   - Tool outputs → Summarize or remove if not critical\n   - Long conversations → Summarize key points\n\n4. **Save Original Context**:\n   - Save full context to `.claude/memory/` before compression\n   - Store in SQLite `context_history` table\n   - Create compression pointer for recovery\n\n5. **Execute Compression**:\n   - Apply the compression strategy\n   - Verify context size reduced to ~60% of original\n   - Ensure critical information preserved\n\n6. **Provide Feedback**:\n   - Show before/after context size\n   - Indicate what was compressed\n   - Confirm save location\n\n## Compression Example:\n\nBefore (100K tokens):\n- Recent conversation (30K) ← KEEP\n- File contents (40K) ← COMPRESS to pointers (5K)\n- Web pages (20K) ← COMPRESS to summaries (3K)\n- Old conversation (10K) ← COMPRESS to summary (2K)\n\nAfter (40K tokens): 60% reduction\n\n## Important:\n- Always save before compressing\n- Preserve recent context (30%)\n- Target ~60% final size\n- Ensure recoverability\n\nExample output:\n```\n🗜️ Context compressed: 128K → 52K tokens (60% reduction)\n💾 Original saved to: .claude/memory/context-2026-01-29-001.json\n📊 Compressed: 15 files, 3 web pages, 2 conversations\n```"
+          }
+        ]
       }
     ],
     "PostToolUse": [
       {
-        "type": "prompt",
-        "name": "auto-save-important-operations",
-        "description": "Automatically save memory after important tool operations",
-        "enabled": true,
-        "timeout": 5000,
-        "prompt": "An important tool operation has just been executed: {{tool_name}}\n\n{{#if bash_command}}Command: {{bash_command}}{{/if}}\n\nYour task: Automatically save this operation to memory if it's significant.\n\n## Steps:\n\n1. **Determine Significance**:\n   - **Write/Edit**: Always save (code changes)\n   - **Git commit/push**: Always save (version control)\n   - **Test runs**: Save if tests passed or if fixing failures\n   - **Other Bash**: Save only if modifying project state\n\n2. **Check if Should Save**:\n   - Skip if this is a trivial operation (e.g., `ls`, `cat`)\n   - Skip if already saved recently (<2 minutes ago)\n   - Skip if operation failed without useful info\n\n3. **Save to Memory** (if significant):\n   - Use `memory:save` command\n   - Include operation details in session data\n   - Update task metadata\n\n4. **Provide Feedback**:\n   - If saved: Brief confirmation (1 line)\n   - If skipped: No output (silent)\n\n## Examples:\n\n**Save these**:\n- `Write` tool: Created new file `src/auth.py`\n- `Edit` tool: Modified `config.json`\n- `git commit -m \"Add auth\"`\n- `pytest tests/` (if passed)\n\n**Skip these**:\n- `ls -la`\n- `cat README.md`\n- `echo \"test\"`\n- Failed operations with no useful info\n\n## Important:\n- Keep this very fast (<2 seconds)\n- Silent operation (no output unless error)\n- Don't save trivial operations\n- Batch saves if multiple operations in quick succession\n\nExample output (if saved):\n```\n💾 Auto-saved: Write operation on src/auth.py\n```",
-        "condition": {
-          "tools": [
-            "Write",
-            "Edit",
-            "Bash"
-          ],
-          "bashPatterns": [
-            "git commit",
-            "git push",
-            "npm test",
-            "pytest",
-            "cargo test"
-          ]
-        }
+        "hooks": [
+          {
+            "type": "prompt",
+            "name": "auto-save-important-operations",
+            "description": "Automatically save memory after important tool operations",
+            "enabled": true,
+            "timeout": 5000,
+            "prompt": "An important tool operation has just been executed: {{tool_name}}\n\n{{#if bash_command}}Command: {{bash_command}}{{/if}}\n\nYour task: Automatically save this operation to memory if it's significant.\n\n## Steps:\n\n1. **Determine Significance**:\n   - **Write/Edit**: Always save (code changes)\n   - **Git commit/push**: Always save (version control)\n   - **Test runs**: Save if tests passed or if fixing failures\n   - **Other Bash**: Save only if modifying project state\n\n2. **Check if Should Save**:\n   - Skip if this is a trivial operation (e.g., `ls`, `cat`)\n   - Skip if already saved recently (<2 minutes ago)\n   - Skip if operation failed without useful info\n\n3. **Save to Memory** (if significant):\n   - Use `memory:save` command\n   - Include operation details in session data\n   - Update task metadata\n\n4. **Provide Feedback**:\n   - If saved: Brief confirmation (1 line)\n   - If skipped: No output (silent)\n\n## Examples:\n\n**Save these**:\n- `Write` tool: Created new file `src/auth.py`\n- `Edit` tool: Modified `config.json`\n- `git commit -m \"Add auth\"`\n- `pytest tests/` (if passed)\n\n**Skip these**:\n- `ls -la`\n- `cat README.md`\n- `echo \"test\"`\n- Failed operations with no useful info\n\n## Important:\n- Keep this very fast (<2 seconds)\n- Silent operation (no output unless error)\n- Don't save trivial operations\n- Batch saves if multiple operations in quick succession\n\nExample output (if saved):\n```\n💾 Auto-saved: Write operation on src/auth.py\n```",
+            "condition": {
+              "tools": [
+                "Write",
+                "Edit",
+                "Bash"
+              ],
+              "bashPatterns": [
+                "git commit",
+                "git push",
+                "npm test",
+                "pytest",
+                "cargo test"
+              ]
+            }
+          }
+        ]
       }
     ],
     "Stop": [
       {
-        "type": "prompt",
-        "name": "session-end-cleanup",
-        "description": "Save memory and organize when session ends",
-        "enabled": true,
-        "timeout": 15000,
-        "prompt": "The Claude Code session is ending.\n\nYour task: Save the session memory and organize it for future use.\n\n## Steps:\n\n1. **Save Current Session**:\n   - Use `memory:save` command to save final session state\n   - Include session summary and key decisions\n   - Update task metadata\n\n2. **Organize Memory**:\n   - Use `memory-organizer` agent to organize and optimize\n   - Deduplicate content\n   - Extract topics and summaries\n   - Update database indexes\n\n3. **Check for Archival**:\n   - If task is complete, suggest archiving\n   - If task is long-running, suggest organizing\n   - If task is inactive, suggest cleanup\n\n4. **Provide Summary**:\n   - Show session statistics (duration, messages, operations)\n   - Show memory usage (size, location)\n   - Suggest next steps if applicable\n\n5. **Prompt User** (if needed):\n   - If task complete: \"Would you like to archive this task?\"\n   - If memory large: \"Memory is growing large, consider organizing\"\n   - If inactive: \"This task hasn't been active, consider cleanup\"\n\n## Session Summary Format:\n\n```\n📊 Session Summary\n──────────────────────────────────────────────\n⏱️  Duration: 45 minutes\n💬 Messages: 23 (12 user, 11 assistant)\n🔧 Operations: 8 (5 writes, 2 edits, 1 git commit)\n💾 Memory saved: .claude/memory/active-tasks/task-001/\n📦 Size: 45K tokens\n\n✅ Task: Implement authentication feature\n📝 Progress: JWT auth completed, tests passing\n\n💡 Suggestions:\n   • Consider archiving this task (use /memory:archive)\n   • Review and organize memory (use /memory:organize)\n```\n\n## Important:\n- Always save before ending\n- Provide useful summary\n- Suggest actionable next steps\n- Keep output concise but informative\n\nExample output:\n```\n💾 Session saved to task-001\n🧹 Memory organized (removed 3 duplicates, extracted 5 topics)\n📊 Session: 45 min, 23 messages, 8 operations\n\n💡 Tip: Task looks complete. Consider archiving with /memory:archive task-001\n```"
+        "hooks": [
+          {
+            "type": "prompt",
+            "name": "session-end-cleanup",
+            "description": "Save memory and organize when session ends",
+            "enabled": true,
+            "timeout": 15000,
+            "prompt": "The Claude Code session is ending.\n\nYour task: Save the session memory and organize it for future use.\n\n## Steps:\n\n1. **Save Current Session**:\n   - Use `memory:save` command to save final session state\n   - Include session summary and key decisions\n   - Update task metadata\n\n2. **Organize Memory**:\n   - Use `memory-organizer` agent to organize and optimize\n   - Deduplicate content\n   - Extract topics and summaries\n   - Update database indexes\n\n3. **Check for Archival**:\n   - If task is complete, suggest archiving\n   - If task is long-running, suggest organizing\n   - If task is inactive, suggest cleanup\n\n4. **Provide Summary**:\n   - Show session statistics (duration, messages, operations)\n   - Show memory usage (size, location)\n   - Suggest next steps if applicable\n\n5. **Prompt User** (if needed):\n   - If task complete: \"Would you like to archive this task?\"\n   - If memory large: \"Memory is growing large, consider organizing\"\n   - If inactive: \"This task hasn't been active, consider cleanup\"\n\n## Session Summary Format:\n\n```\n📊 Session Summary\n──────────────────────────────────────────────\n⏱️  Duration: 45 minutes\n💬 Messages: 23 (12 user, 11 assistant)\n🔧 Operations: 8 (5 writes, 2 edits, 1 git commit)\n💾 Memory saved: .claude/memory/active-tasks/task-001/\n📦 Size: 45K tokens\n\n✅ Task: Implement authentication feature\n📝 Progress: JWT auth completed, tests passing\n\n💡 Suggestions:\n   • Consider archiving this task (use /memory:archive)\n   • Review and organize memory (use /memory:organize)\n```\n\n## Important:\n- Always save before ending\n- Provide useful summary\n- Suggest actionable next steps\n- Keep output concise but informative\n\nExample output:\n```\n💾 Session saved to task-001\n🧹 Memory organized (removed 3 duplicates, extracted 5 topics)\n📊 Session: 45 min, 23 messages, 8 operations\n\n💡 Tip: Task looks complete. Consider archiving with /memory:archive task-001\n```"
+          }
+        ]
       }
     ]
   }
