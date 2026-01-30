@@ -1,0 +1,224 @@
+{
+  "analysis_timestamp": "2026-01-29T14:30:00Z",
+  "context_snapshot": {
+    "total_tokens": 150000,
+    "max_tokens": 200000,
+    "usage_percentage": 75.0,
+    "warning_threshold": 120000,
+    "critical_threshold": 160000
+  },
+  "distribution": {
+    "by_role": {
+      "system": {
+        "tokens": 10000,
+        "percentage": 6.7,
+        "items": 5
+      },
+      "user": {
+        "tokens": 25000,
+        "percentage": 16.7,
+        "items": 45
+      },
+      "assistant": {
+        "tokens": 35000,
+        "percentage": 23.3,
+        "items": 45
+      },
+      "tool": {
+        "tokens": 80000,
+        "percentage": 53.3,
+        "items": 120
+      }
+    },
+    "by_type": {
+      "conversation": {
+        "tokens": 60000,
+        "percentage": 40.0,
+        "compressibility": "medium"
+      },
+      "file_contents": {
+        "tokens": 50000,
+        "percentage": 33.3,
+        "compressibility": "high"
+      },
+      "command_outputs": {
+        "tokens": 25000,
+        "percentage": 16.7,
+        "compressibility": "high"
+      },
+      "other_tools": {
+        "tokens": 15000,
+        "percentage": 10.0,
+        "compressibility": "medium"
+      }
+    },
+    "by_age": {
+      "recent_30min": {
+        "tokens": 45000,
+        "percentage": 30.0,
+        "recommendation": "preserve"
+      },
+      "1_hour": {
+        "tokens": 35000,
+        "percentage": 23.3,
+        "recommendation": "light_compression"
+      },
+      "2_hours": {
+        "tokens": 40000,
+        "percentage": 26.7,
+        "recommendation": "standard_compression"
+      },
+      "older": {
+        "tokens": 30000,
+        "percentage": 20.0,
+        "recommendation": "aggressive_compression"
+      }
+    }
+  },
+  "compression_opportunities": [
+    {
+      "id": 1,
+      "type": "file_content",
+      "description": "Large file: src/api/handlers.py",
+      "current_tokens": 15000,
+      "compressed_tokens": 150,
+      "savings": 14850,
+      "compression_ratio": 0.01,
+      "priority": "high",
+      "strategy": "pointer",
+      "age_hours": 2.5,
+      "last_accessed": "2026-01-29T12:00:00Z",
+      "recommendation": "Compress immediately"
+    },
+    {
+      "id": 2,
+      "type": "command_output",
+      "description": "npm install output",
+      "current_tokens": 8000,
+      "compressed_tokens": 800,
+      "savings": 7200,
+      "compression_ratio": 0.10,
+      "priority": "high",
+      "strategy": "excerpt",
+      "age_hours": 1.5,
+      "last_accessed": "2026-01-29T13:00:00Z",
+      "recommendation": "Compress immediately"
+    },
+    {
+      "id": 3,
+      "type": "conversation",
+      "description": "Historical discussion (messages 1-25)",
+      "current_tokens": 25000,
+      "compressed_tokens": 5000,
+      "savings": 20000,
+      "compression_ratio": 0.20,
+      "priority": "medium",
+      "strategy": "summary",
+      "age_hours": 3.0,
+      "last_accessed": "2026-01-29T11:30:00Z",
+      "recommendation": "Compress after current task"
+    },
+    {
+      "id": 4,
+      "type": "file_content",
+      "description": "Test file: tests/test_api.py",
+      "current_tokens": 6000,
+      "compressed_tokens": 100,
+      "savings": 5900,
+      "compression_ratio": 0.02,
+      "priority": "medium",
+      "strategy": "pointer",
+      "age_hours": 1.0,
+      "last_accessed": "2026-01-29T13:30:00Z",
+      "recommendation": "Compress if needed"
+    },
+    {
+      "id": 5,
+      "type": "tool_result",
+      "description": "Search results for 'authentication'",
+      "current_tokens": 3000,
+      "compressed_tokens": 600,
+      "savings": 2400,
+      "compression_ratio": 0.20,
+      "priority": "low",
+      "strategy": "reference",
+      "age_hours": 0.5,
+      "last_accessed": "2026-01-29T14:00:00Z",
+      "recommendation": "Keep for now"
+    }
+  ],
+  "compression_plan": {
+    "target_tokens": 90000,
+    "target_percentage": 60.0,
+    "total_savings": 50350,
+    "items_to_compress": 4,
+    "preservation_zone": {
+      "tokens": 45000,
+      "percentage": 30.0,
+      "description": "Recent 30 minutes of context"
+    },
+    "compression_zone": {
+      "tokens": 105000,
+      "percentage": 70.0,
+      "target_compressed": 45000,
+      "compression_ratio": 0.43
+    },
+    "execution_order": [
+      {
+        "step": 1,
+        "item_id": 1,
+        "description": "Compress src/api/handlers.py",
+        "savings": 14850
+      },
+      {
+        "step": 2,
+        "item_id": 2,
+        "description": "Compress npm install output",
+        "savings": 7200
+      },
+      {
+        "step": 3,
+        "item_id": 3,
+        "description": "Summarize historical conversation",
+        "savings": 20000
+      },
+      {
+        "step": 4,
+        "item_id": 4,
+        "description": "Compress tests/test_api.py",
+        "savings": 5900
+      }
+    ],
+    "estimated_result": {
+      "final_tokens": 99650,
+      "final_percentage": 66.4,
+      "total_reduction": 50350,
+      "reduction_percentage": 33.6
+    }
+  },
+  "recommendations": {
+    "immediate_actions": [
+      "Compress large file contents (items #1, #2)",
+      "Store full content in SQLite before compression",
+      "Verify compression success"
+    ],
+    "follow_up_actions": [
+      "Summarize historical conversations (item #3)",
+      "Archive completed tasks",
+      "Monitor context growth rate"
+    ],
+    "preventive_measures": [
+      "Avoid reading large files unnecessarily",
+      "Use line-range reads when possible",
+      "Summarize command outputs proactively",
+      "Archive tasks promptly after completion"
+    ]
+  },
+  "risk_assessment": {
+    "information_loss_risk": "low",
+    "recovery_capability": "high",
+    "compression_reversibility": "full",
+    "critical_content_preserved": true,
+    "notes": "All compressed content stored in SQLite with full recovery capability"
+  }
+}
