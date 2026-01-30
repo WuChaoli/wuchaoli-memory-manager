@@ -1,126 +1,21 @@
 {
-  "marketplace": {
-    "name": "wuchaoli-claude-plugins",
-    "displayName": "wuchaoli 的 Claude 插件市场",
-    "version": "1.0.0",
-    "description": "个人维护的 Claude Code 插件集合，包含智能记忆管理等生产力工具",
-    "icon": "🚀",
-    "author": "wuchaoli"
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "wuchaoli-claude-plugins",
+  "description": "Personal collection of Claude Code plugins including intelligent memory management and productivity tools",
+  "owner": {
+    "name": "wuchaoli"
   },
   "plugins": [
     {
       "name": "memory-manager",
-      "displayName": "Memory Manager",
+      "description": "Intelligent memory management plugin for Claude Code. Provides session persistence, smart context compression, task-driven organization, and long-term knowledge storage with SQLite.",
       "version": "1.0.0",
-      "description": "智能记忆管理插件，为 Claude Code 提供完整的记忆管理解决方案。支持会话持久化、智能压缩、任务驱动组织和长期知识存储。",
-      "longDescription": "# Memory Manager\n\n智能记忆管理插件，为 Claude Code 提供完整的记忆管理解决方案。\n\n## 核心功能\n\n- **会话记忆持久化**: 自动保存和加载会话记忆，无缝衔接工作进度\n- **智能 Compact 策略**: 当上下文超过阈值时，智能压缩历史内容，保留关键信息\n- **任务驱动组织**: 按任务组织记忆，完成后自动归档到长期存储\n- **长期记忆存储**: 使用 SQLite 数据库存储长期记忆，支持全文搜索\n- **Serena 集成**: 与 Serena MCP 深度集成，实现项目知识管理\n\n## 主要命令\n\n| 命令 | 说明 |\n|------|------|\n| `/memory:save` | 手动保存当前会话记忆 |\n| `/memory:load` | 加载指定任务或会话的记忆 |\n| `/memory:search` | 搜索历史记忆（支持全文、按任务、按时间、按角色） |\n| `/memory:organize` | 整理当前任务的记忆结构 |\n| `/memory:export` | 导出记忆数据 |\n| `/memory:stats` | 查看记忆统计信息 |\n| `/memory:compact` | 手动触发 compact 并重启会话 |\n| `/memory:archive` | 归档已完成任务到长期存储 |\n\n## 技术架构\n\n- **存储**: SQLite 数据库（结构化存储 + FTS5 全文搜索）\n- **集成**: Serena MCP（项目知识管理）\n- **同步**: 自动同步到 CLAUDE.md\n- **压缩**: 智能 30%-70% 分区压缩算法\n\n## 安装指南\n\n### 方式一：使用压缩包\n\n1. 下载本仓库的 release\n2. 解压到本地目录\n3. 在 Claude Code 中使用：\n   ```bash\n   cc --plugin-dir /path/to/memory-manager\n   ```\n\n### 方式二：使用 Git\n\n1. 克隆仓库：\n   ```bash\n   git clone https://github.com/wuchaoli/wuchaoli-claude-plugin.git\n   ```\n\n2. 使用插件：\n   ```bash\n   cc --plugin-dir wuchaoli-claude-plugin/memory-manager\n   ```\n\n### 方式三：发布到本地市场\n\n1. 配置本地市场：\n   ```bash\n   claude config add marketplace /path/to/wuchaoli-claude-plugin/marketplace.json\n   ```\n\n2. 安装插件：\n   ```bash\n   claude plugin install memory-manager\n   ```",
-      "author": "wuchaoli",
-      "license": "MIT",
-      "homepage": "https://github.com/wuchaoli/wuchaoli-claude-plugin",
-      "repository": "https://github.com/wuchaoli/wuchaoli-claude-plugin",
-      "bugs": "https://github.com/wuchaoli/wuchaoli-claude-plugin/issues",
-      "icon": "🧠",
-      "tags": [
-        "memory",
-        "persistence",
-        "session-management",
-        "context-optimization",
-        "sqlite",
-        "knowledge-base",
-        "serena",
-        "productivity"
-      ],
-      "categories": [
-        "Productivity",
-        "Data Management",
-        "Developer Tools"
-      ],
-      "manifestPath": "memory-manager/.claude-plugin/plugin.json",
-      "directoryPath": "memory-manager",
-      "readmePath": "memory-manager/README.md",
-      "requirements": {
-        "claudeCode": ">=1.0.0",
-        "node": ">=18.0.0",
-        "python": ">=3.8",
-        "dependencies": [
-          "sqlite3"
-        ]
+      "author": {
+        "name": "wuchaoli"
       },
-      "installation": {
-        "type": "plugin-dir",
-        "instructions": [
-          "克隆或下载插件到本地",
-          "在 Claude Code 中使用 --plugin-dir 参数指定插件目录",
-          "例如: cc --plugin-dir /path/to/memory-manager"
-        ]
-      },
-      "configuration": {
-        "file": ".claude/memory-manager.local.md",
-        "properties": [
-          {
-            "name": "compression_threshold",
-            "type": "number",
-            "default": 60,
-            "description": "压缩阈值（百分比）"
-          },
-          {
-            "name": "retention_days",
-            "type": "number",
-            "default": 30,
-            "description": "记忆保留时间（天）"
-          },
-          {
-            "name": "auto_archive_prompt",
-            "type": "boolean",
-            "default": true,
-            "description": "是否启用自动归档提示"
-          }
-        ]
-      },
-      "features": [
-        "自动保存和加载会话记忆",
-        "智能上下文压缩（30%-70%策略）",
-        "任务驱动的记忆组织",
-        "SQLite 长期存储 + FTS5 全文搜索",
-        "与 Serena MCP 深度集成",
-        "自动会话管理钩子",
-        "多种搜索模式（全文、任务、时间、角色）",
-        "记忆导出功能"
-      ],
-      "screenshots": [],
-      "changelog": [
-        {
-          "version": "1.0.0",
-          "date": "2026-01-30",
-          "changes": [
-            "初始发布",
-            "实现核心记忆管理功能",
-            "实现智能压缩策略",
-            "集成 Serena MCP",
-            "添加 8 个命令、2 个 agent、3 个 skill"
-          ]
-        }
-      ],
-      "keywords": [
-        "memory",
-        "persistence",
-        "context",
-        "compression",
-        "sqlite",
-        "knowledge",
-        "session",
-        "archive",
-        "search",
-        "serena"
-      ],
-      "rating": {
-        "average": 0,
-        "count": 0
-      },
-      "downloads": 0,
-      "createdAt": "2026-01-30",
-      "updatedAt": "2026-01-30"
+      "source": "./memory-manager",
+      "category": "productivity",
+      "homepage": "https://github.com/WuChaoli/wuchaoli-memory-manager/tree/main/memory-manager"
     }
-  ],
-  "_comment": "This is a local marketplace index for wuchaoli's Claude Code plugins. You can add this marketplace using: claude config add marketplace /path/to/marketplace.json"
+  ]
 }
