@@ -11,6 +11,5 @@
     "./agents/memory-organizer.md"
   ],
   "skills": "./skills/",
-  "hooks": "./hooks/hooks.json",
   "license": "MIT"
 }
