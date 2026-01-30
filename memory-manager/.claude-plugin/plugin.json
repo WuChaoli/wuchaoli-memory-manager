@@ -6,9 +6,8 @@
     "name": "wuchaoli",
     "email": "434518591@qq.com"
   },
-  "commands": "./commands/",
   "agents": "./agents/",
   "skills": "./skills/",
-  "hooks": "./hooks/",
+  "hooks": "./hooks/hooks.json",
   "license": "MIT"
 }
