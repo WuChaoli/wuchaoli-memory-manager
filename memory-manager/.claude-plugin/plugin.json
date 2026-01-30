@@ -6,7 +6,10 @@
     "name": "wuchaoli",
     "email": "434518591@qq.com"
   },
-  "agents": "./agents/",
+  "agents": [
+    "./agents/context-analyzer.md",
+    "./agents/memory-organizer.md"
+  ],
   "skills": "./skills/",
   "hooks": "./hooks/hooks.json",
   "license": "MIT"
