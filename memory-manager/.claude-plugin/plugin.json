@@ -1,98 +1,10 @@
 {
   "name": "memory-manager",
-  "displayName": "Memory Manager",
   "version": "1.0.0",
   "description": "Intelligent memory management plugin for Claude Code with session persistence, smart compression, and long-term knowledge storage.",
-  "icon": "🧠",
-  "author": "wuchaoli",
-  "license": "MIT",
-  "homepage": "https://github.com/wuchaoli/wuchaoli-claude-plugin",
-  "repository": "https://github.com/wuchaoli/wuchaoli-claude-plugin",
-  "bugs": "https://github.com/wuchaoli/wuchaoli-claude-plugin/issues",
-  "minimumClaudeVersion": "1.0.0",
-  "categories": ["Productivity", "Data Management"],
-  "commands": [
-    {
-      "name": "memory:save",
-      "path": "commands/save.md",
-      "description": "保存当前会话到记忆数据库"
-    },
-    {
-      "name": "memory:load",
-      "path": "commands/load.md",
-      "description": "加载指定任务或会话的记忆"
-    },
-    {
-      "name": "memory:search",
-      "path": "commands/search.md",
-      "description": "搜索历史记忆（支持多种搜索模式）"
-    },
-    {
-      "name": "memory:organize",
-      "path": "commands/organize.md",
-      "description": "整理当前任务的记忆结构"
-    },
-    {
-      "name": "memory:export",
-      "path": "commands/export.md",
-      "description": "导出记忆数据"
-    },
-    {
-      "name": "memory:stats",
-      "path": "commands/stats.md",
-      "description": "查看记忆统计信息"
-    },
-    {
-      "name": "memory:compact",
-      "path": "commands/compact.md",
-      "description": "手动触发智能压缩并重启会话"
-    },
-    {
-      "name": "memory:archive",
-      "path": "commands/archive.md",
-      "description": "归档已完成任务到长期存储"
-    }
-  ],
-  "agents": [
-    {
-      "name": "context-analyzer",
-      "path": "agents/context-analyzer.md",
-      "description": "分析上下文内容，提取关键信息，提供压缩策略"
-    },
-    {
-      "name": "memory-organizer",
-      "path": "agents/memory-organizer.md",
-      "description": "整理和优化记忆结构，去重和分类"
-    }
-  ],
-  "skills": [
-    {
-      "name": "memory-management",
-      "path": "skills/memory-management/SKILL.md",
-      "description": "全面管理 Claude Code 会话记忆和长期知识"
-    },
-    {
-      "name": "compact-strategy",
-      "path": "skills/compact-strategy/SKILL.md",
-      "description": "智能上下文压缩策略和算法"
-    },
-    {
-      "name": "context-optimization",
-      "path": "skills/context-optimization/SKILL.md",
-      "description": "上下文优化和分析工具"
-    }
-  ],
-  "hooks": {
-    "path": "hooks/hooks.json"
+  "author": {
+    "name": "wuchaoli",
+    "email": "your.email@example.com"
   },
-  "tags": [
-    "memory",
-    "persistence",
-    "session-management",
-    "context-optimization",
-    "sqlite",
-    "knowledge-base",
-    "serena",
-    "productivity"
-  ]
+  "license": "MIT"
 }
